@@ -1,6 +1,6 @@
 const electron = require('electron')
 
-const { app, BrowserWindow, Menu } = electron
+const { app, BrowserWindow, Menu, ipcMain } = electron
 
 let mainWindow, addWindow
 
@@ -23,11 +23,21 @@ const createAddWindow = () => {
     addWindow = new BrowserWindow({
         height: 200,
         width: 300,
-        title: 'Add New Todo'
+        title: 'Add New Todo',
+        webPreferences: {
+            nodeIntegration: true,
+            contextIsolation: false,
+        }
     })
     addWindow.loadURL(`file://${__dirname}/add.html`)
+
+    addWindow.on("closed", ()=> { addWindow = null})
 }
 
+ipcMain.on('todo:add', (event, todo)=> {
+    mainWindow.webContents.send('todo:add', todo)
+    addWindow.close()
+})
 
 const menuTemplate = [
     {
@@ -39,6 +49,13 @@ const menuTemplate = [
                     createAddWindow()
                 }
             },
+            {
+                label: 'Clear Todo',
+                click() {
+                    mainWindow.webContents.send('todo:clear')
+                }
+            },
+            {type: 'separator'},
             {
                 label: "Quit",
                 accelerator: 'CmdOrCtrl+Q',
@@ -57,7 +74,10 @@ if(process.platform === 'darwin') {
 if(process.env.NODE_ENV !== 'production'){
     menuTemplate.push({
         label: 'Developer',
-        submenu: [{
+        submenu: [
+            {role: 'reload'},
+            {
+
             label: 'Toggle Developer Tools',
             accelerator: 'CmdOrCtrl+Alt+I',
             click(item, focusedWindow) {
