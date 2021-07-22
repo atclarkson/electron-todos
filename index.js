@@ -12,6 +12,7 @@ app.on('ready', () => {
         }
     })
     mainWindow.loadURL(`file://${__dirname}/main.html`)
+    mainWindow.on('closed', () => app.quit())
 
     const mainMenu = Menu.buildFromTemplate(menuTemplate)
     Menu.setApplicationMenu(mainMenu)
@@ -51,4 +52,17 @@ const menuTemplate = [
 
 if(process.platform === 'darwin') {
     menuTemplate.unshift({})
+}
+
+if(process.env.NODE_ENV !== 'production'){
+    menuTemplate.push({
+        label: 'Developer',
+        submenu: [{
+            label: 'Toggle Developer Tools',
+            accelerator: 'CmdOrCtrl+Alt+I',
+            click(item, focusedWindow) {
+                focusedWindow.toggleDevTools()
+            }
+        }]
+    })
 }
