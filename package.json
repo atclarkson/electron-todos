@@ -1,0 +1,23 @@
+{
+  "name": "electron-todos",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/atclarkson/electron-todos.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/atclarkson/electron-todos/issues"
+  },
+  "homepage": "https://github.com/atclarkson/electron-todos#readme",
+  "dependencies": {
+    "electron": "^13.1.7"
+  }
+}
